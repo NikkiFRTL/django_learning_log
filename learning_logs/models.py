@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # ОПРЕДЕЛЕНИЕ МОДЕЛЕЙ
 # Create your models here.
 class Topic(models.Model):
@@ -18,4 +19,20 @@ class Topic(models.Model):
     # Django вызывает метод __str__() для простого представления модели. В описаном случае - строку из атрибута text.
     def __str__(self):
         """ Возвращает строковое представление модели """
+        return self.text
+
+
+class Entry(models.Model):
+    """ Информация, изученная пользователем по теме """
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    text = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'entries'
+
+    def __str__(self):
+        """ Возвращает строковое представление модели"""
+        if len(self.text) > 50:
+            return f"{self.text[:50]}..."
         return self.text
