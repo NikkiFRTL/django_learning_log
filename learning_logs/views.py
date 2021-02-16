@@ -1,8 +1,10 @@
-from django.shortcuts import render
-from .models import Topic  # Сначала импортируется модель, связанная с нужными данными
+from django.shortcuts import render, redirect # HttpResponseRedirect который будет использоваться для перенаправления
+# пользователя к странице topics после отправки введенной темы.
+from .models import Topic, Entry  # Импортируется модели, связанные с нужными данными
+from .forms import TopicForm, EntryForm
 
 
-# Create your views here.
+# Создание Предствлений (views)
 def index(request):
     """
     Домашняя страница приложения learning_log
@@ -17,9 +19,99 @@ def topics(request):  # Функции topics() необходим один па
     # Далеев ыдается запрос к базе данных на получение объектов Topic, отсортированных по атрибуту date_added.
     # Полученный итоговый набор сохраняется в topics.
     topics = Topic.objects.order_by('date_added')
-    context = {'topics': topics}
-    return render(request, 'learning_logs/topics.html', context)  # Контекст.
+
     # Контекст представляет собой словарь,
     # в котором ключами являются имена, используемые в шаблоне для обращения к данным,
     # а значениями — данные, которые должны передаваться шаблону.
+    context = {'topics': topics}
 
+    return render(request, 'learning_logs/topics.html', context)
+
+
+def topic(request, topic_id):
+    # Функция получает значение, совпавшее с выражением /<int:topic_id>/ и сохраняет его в topic_id.
+    """
+    Выводит одну тему и все ее записи.
+    """
+    # Функция get() используется для получения темы.
+    topic = Topic.objects.get(id=topic_id)
+
+    # Загружаются записи, связанные с данной темой, и они
+    # упорядочиваются по значению date_added: знак «минус» перед date_added сортирует результаты вобратном порядке.
+    entries = topic.entry_set.order_by('-date_added')
+
+    # Тема и записи сохраняются в словаре context, который передается шаблону topic.html.
+    context = {'topic': topic, 'entries': entries}
+
+    return render(request, 'learning_logs/topic.html', context)
+
+
+def new_topic(request):
+    """Определяет новую тему."""
+    if request.method != 'POST':
+        # Данные не отправлялись; создается пустая форма.
+        form = TopicForm()
+    else:
+        # Отправлены данные POST; обработать данные.
+        form = TopicForm(data=request.POST)
+        # Проверка на правильность заполнения.
+        if form.is_valid():
+            form.save()
+            return redirect('learning_logs:topics')
+    # Вывести пустую или недействительную форму.
+    context = {'form': form}
+    return render(request, 'learning_logs/new_topic.html', context)
+
+
+def new_entry(request, topic_id):
+    """Добавляет новую запись по конкретной теме."""
+    topic = Topic.objects.get(id=topic_id)
+    if request.method != 'POST':
+        # Данные не отправлялись; создается пустая форма.
+        form = EntryForm()
+    else:
+        # Отправлены данные POST; обработать данные.
+        form = EntryForm(data=request.POST)
+        # Проверка на правильность заполнения.
+        if form.is_valid():
+            # При вызове save() мы включаем аргумент commit=False для того, чтобы создать новый объект записи
+            # и сохранить его в new_entry, не сохраняя пока в базе данных.
+            new_entry = form.save(commit=False)
+
+            new_entry.topic = topic
+
+            # Запись сохраняется в базе данных с правильно ассоциированной темой topic.
+            new_entry.save()
+
+            # Получает два аргумента — имя представления, которому передается управление,
+            # и аргумент для функции представления.
+            # Вызов перенаправляет пользователя на страницу темы, для которой была создана запись.
+            return redirect('learning_logs:topic', topic_id=topic_id)
+
+    # Вывести пустую или недействительную форму.
+    context = {'topic': topic, 'form': form}
+
+    return render(request, 'learning_logs/new_entry.html', context)
+
+
+def edit_entry(request, entry_id):
+    """Редактирует существующую запись."""
+    entry = Entry.objects.get(id=entry_id)
+    topic = entry.topic
+    if request.method != 'POST':
+        # Этот аргумент приказывает Django создать форму, заранее заполненную информацией из существующего
+        # объекта записи. Пользователь видит свои существующие данные и может отредактировать их.
+        form = EntryForm(instance=entry)
+    else:
+        # Аргументы риказывают Django создать экземпляр формы на основании информации существующего объекта записи,
+        # обновленный данными из request.POST
+        form = EntryForm(instance=entry, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('learning_logs:topic', topic_id=topic.id)
+
+    # Если отображается исходная форма для редактирования записи или если отправленная форма недействительна,
+    # создается словарь context, а страница строится на базе шаблона edit_entry.html.
+    context = {'entry': entry, 'topic': topic, 'form': form}
+
+    return render(request, 'learning_logs/edit_entry.html', context)
