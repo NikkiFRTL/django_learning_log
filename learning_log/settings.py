@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Мои приложения
     'learning_logs',
+    'users'
     'pizzeria',
 
     # Приложения Django по умолчанию.

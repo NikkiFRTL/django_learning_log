@@ -944,5 +944,77 @@ return render(request, 'learning_logs/edit_entry.html', context)
 edit_entry.html
 {% extends "learning_logs/base.html" %}
 {% block content %}
+<p><a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a></p>
+<p>Edit entry:</p>
+❶ <form action="{% url 'learning_logs:edit_entry' entry.id %}" method='post'>
+{% csrf_token %}
+{{ form.as_p }}
+❷ <button name="submit">save changes</button>
+</form>
+{% endblock content %}
+В точке  аргумент action отправляет форму функции edit_entry() для обработки. Идентификатор записи включается как аргумент в тег {% url %} , чтобы функция представления могла изменить правильный объект записи. Кнопка отправки данных создается с текстом, который напоминает пользователю, что он сохраняет изменения, а не создает новую запись .
 
+СОЗДАНИЕ ССЫЛКИ НА СТРАНИЦУ EDIT_ENTRY
 
+Теперь необходимо включить ссылку на страницу edit_entry в каждую тему на странице со списком тем:
+topic.html
+...
+{% for entry in entries %}
+<li>
+<p>{{ entry.date_added|date:'M d, Y H:i' }}</p>
+<p>{{ entry.text|linebreaks }}</p>
+<p>
+<a href="{% url 'learning_logs:edit_entry' entry.id %}">Edit entry</a>
+</p>
+</li>
+...
+После даты и текста каждой записи включается ссылка редактирования. Мы используем шаблонный тег {% url %} для
+определения схемы URL из именованной схемы edit_entry и идентификатора текущей записи в цикле (entry.id).
+Текст ссылки "edit entry" выводится после каждой записи на странице. На рис. 19.3 показано, как выглядит страница
+со списком тем с этими ссылками.
+Приложение Learning Log уже сейчас содержит большую часть необходимой функциональности.
+Пользователи могут добавлять темы и записи, а также читать любые записи по своему усмотрению.
+В этом разделе мы реализуем систему регистрации пользователей, чтобы любой желающий мог создать свою учетную запись
+в Learning Log и ввести собственный набор тем и записей.
+
+СОЗДАНИЕ УЧЕТНЫХ ЗАПИСЕЙ ПОЛЬЗОВАТЕЛЕЙ
+
+В этом разделе мы создадим систему регистрации и авторизации пользователей, чтобы люди могли создать учетную запись,
+начать и завершать сеанс работы с приложением. Для всей функциональности, относящейся к работе с пользователями,
+будет создано отдельное приложение. Мы также слегка изменим модель Topic, чтобы каждая тема была связана с
+конкретным пользователем.
+
+ПРИЛОЖЕНИЕ USERS
+
+Начнем с создания нового приложения users командой startapp:
+(ll_env)learning_log$ python manage.py startapp users
+(ll_env)learning_log$ ls
+❶ db.sqlite3 learning_log learning_logs ll_env manage.py users
+(ll_env)learning_log$ ls users
+❷ __init__.py admin.py apps.py migrations models.py tests.py views.py
+Эта команда создает новый каталог с именем users , структура которого повторяет структуру каталогов приложения learning_logs .
+Добавление пользователей в settings.py
+Новое приложение необходимо добавить в settings.py:
+settings.py
+...
+INSTALLED_APPS = [
+# Мои приложения
+'learning_logs',
+'users',
+# Приложения django по умолчанию.
+...
+]
+...
+Django включает приложение users в общий проект.
+Включение URL-адресов из users
+Затем необходимо изменить корневой файл urls.py, чтобы он включал URL-адреса, написанные для приложения users:
+urls.py
+from django.contrib import admin
+from django.urls import path, include
+urlpatterns = [
+path('admin/', admin.site.urls),
+path('users/', include('users.urls')),
+path('', include('learning_logs.urls')),
+]
+Добавим строку для включения файла urls.py из users. Эта строка будет соответствовать любому URL-адресу,
+начинающемуся со слова users, например http://localhost:8000/users/login/.
