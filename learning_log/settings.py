@@ -35,7 +35,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Мои приложения
     'learning_logs',
-    'pizzeria',
+    'users',
 
     # Приложения Django по умолчанию.
     'django.contrib.admin',
