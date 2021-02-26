@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # ОПРЕДЕЛЕНИЕ МОДЕЛЕЙ
@@ -15,6 +16,11 @@ class Topic(models.Model):
 
     # Полный список полей Fields со всеми возможностями описаны на сайте ресурсе:
     # https://docs.djangoproject.com/en/2.2/ref/models/fields/
+
+    # Сначала модель User импортируется из django.contrib.auth. Затем в Topic добавляется поле owner,
+    # используемое в отношении внешнего ключа к модели User.
+    # Чтобы в них отображались только данные, связанные с текущим пользователем
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # Django вызывает метод __str__() для простого представления модели. В описаном случае - строку из атрибута text.
     def __str__(self):

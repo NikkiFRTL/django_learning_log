@@ -1,26 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="97c64285-09b0-4a84-bec7-58ed30cfb000" name="Default Changelist" comment="Commit #8">
+    <list default="true" id="97c64285-09b0-4a84-bec7-58ed30cfb000" name="Default Changelist" comment="Commit #9">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Guide" beforeDir="false" afterPath="$PROJECT_DIR$/Guide" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/learning_log/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/learning_log/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/learning_log/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/learning_log/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/learning_logs/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/learning_logs/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/learning_logs/templates/learning_logs/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/learning_logs/templates/learning_logs/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/migrations/0002_auto_20210210_2358.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/templates/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/templates/pizzeria/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/templates/pizzeria/pizza_index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pizzeria/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/learning_logs/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/learning_logs/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,8 +22,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -56,8 +46,17 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/users/templates/users" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.jsonOptions" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\1\PycharmProjects\Learning Log\users\templates\users" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\1\PycharmProjects\Learning Log\users\templates\registration" />
+      <recent name="C:\Users\1\PycharmProjects\Learning Log\users" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="exit" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -145,7 +144,21 @@
       <option name="project" value="LOCAL" />
       <updated>1613848113825</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Commit #8">
+      <created>1614192080801</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1614192080801</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Commit #8">
+      <created>1614192095585</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1614192095585</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

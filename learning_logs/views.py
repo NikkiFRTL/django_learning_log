@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect # HttpResponseRedirect который будет использоваться для перенаправления
 # пользователя к странице topics после отправки введенной темы.
+from django.contrib.auth.decorators import login_required
 from .models import Topic, Entry  # Импортируется модели, связанные с нужными данными
 from .forms import TopicForm, EntryForm
 
@@ -12,6 +13,9 @@ def index(request):
     return render(request, 'learning_logs/index.html')
 
 
+# Декоратор login_required() проверяет, вошел ли пользователь в систему, и Django запускает код topics() только
+# при выполнении этого условия. Если же пользователь не выполнил вход, он перенаправляется на страницу входа.
+@login_required
 def topics(request):  # Функции topics() необходим один параметр: объект request, полученный Django от сервера.
     """
     Выводит список тем.
@@ -28,6 +32,7 @@ def topics(request):  # Функции topics() необходим один па
     return render(request, 'learning_logs/topics.html', context)
 
 
+@login_required
 def topic(request, topic_id):
     # Функция получает значение, совпавшее с выражением /<int:topic_id>/ и сохраняет его в topic_id.
     """
@@ -46,6 +51,7 @@ def topic(request, topic_id):
     return render(request, 'learning_logs/topic.html', context)
 
 
+@login_required
 def new_topic(request):
     """Определяет новую тему."""
     if request.method != 'POST':
@@ -63,6 +69,7 @@ def new_topic(request):
     return render(request, 'learning_logs/new_topic.html', context)
 
 
+@login_required
 def new_entry(request, topic_id):
     """Добавляет новую запись по конкретной теме."""
     topic = Topic.objects.get(id=topic_id)
@@ -94,6 +101,7 @@ def new_entry(request, topic_id):
     return render(request, 'learning_logs/new_entry.html', context)
 
 
+@login_required
 def edit_entry(request, entry_id):
     """Редактирует существующую запись."""
     entry = Entry.objects.get(id=entry_id)
