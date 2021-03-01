@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect # HttpResponseRedirect который будет использоваться для перенаправления
 # пользователя к странице topics после отправки введенной темы.
 from django.contrib.auth.decorators import login_required
+# Импортируем исключение Http404, которое будет выдаваться программой при запросе пользователем темы,
+# которую ему видеть не положено.
+from django.http import Http404
 from .models import Topic, Entry  # Импортируется модели, связанные с нужными данными
 from .forms import TopicForm, EntryForm
 
@@ -22,7 +25,7 @@ def topics(request):  # Функции topics() необходим один па
     """
     # Далеев ыдается запрос к базе данных на получение объектов Topic, отсортированных по атрибуту date_added.
     # Полученный итоговый набор сохраняется в topics.
-    topics = Topic.objects.order_by('date_added')
+    topics = Topic.objects.filter(owner=request.user).order_by('date_added')
 
     # Контекст представляет собой словарь,
     # в котором ключами являются имена, используемые в шаблоне для обращения к данным,
@@ -40,6 +43,9 @@ def topic(request, topic_id):
     """
     # Функция get() используется для получения темы.
     topic = Topic.objects.get(id=topic_id)
+
+    # Проверка того, что тема принадлежит текущему пользователю.
+    check_topic_owner(topic, request)
 
     # Загружаются записи, связанные с данной темой, и они
     # упорядочиваются по значению date_added: знак «минус» перед date_added сортирует результаты вобратном порядке.
@@ -62,7 +68,9 @@ def new_topic(request):
         form = TopicForm(data=request.POST)
         # Проверка на правильность заполнения.
         if form.is_valid():
-            form.save()
+            new_topic = form.save(commit=False)
+            new_topic.owner = request.user
+            new_topic.save()
             return redirect('learning_logs:topics')
     # Вывести пустую или недействительную форму.
     context = {'form': form}
@@ -81,11 +89,15 @@ def new_entry(request, topic_id):
         form = EntryForm(data=request.POST)
         # Проверка на правильность заполнения.
         if form.is_valid():
+
             # При вызове save() мы включаем аргумент commit=False для того, чтобы создать новый объект записи
             # и сохранить его в new_entry, не сохраняя пока в базе данных.
             new_entry = form.save(commit=False)
 
             new_entry.topic = topic
+
+            # Проверка того, что тема принадлежит текущему пользователю.
+            check_topic_owner(topic, request)
 
             # Запись сохраняется в базе данных с правильно ассоциированной темой topic.
             new_entry.save()
@@ -106,6 +118,10 @@ def edit_entry(request, entry_id):
     """Редактирует существующую запись."""
     entry = Entry.objects.get(id=entry_id)
     topic = entry.topic
+
+    # Проверка того, что тема принадлежит текущему пользователю.
+    check_topic_owner(topic, request)
+
     if request.method != 'POST':
         # Этот аргумент приказывает Django создать форму, заранее заполненную информацией из существующего
         # объекта записи. Пользователь видит свои существующие данные и может отредактировать их.
@@ -123,3 +139,9 @@ def edit_entry(request, entry_id):
     context = {'entry': entry, 'topic': topic, 'form': form}
 
     return render(request, 'learning_logs/edit_entry.html', context)
+
+
+def check_topic_owner(topic, request):
+    # Проверка того, что тема принадлежит текущему пользователю.
+    if topic.owner != request.user:
+        raise Http404
