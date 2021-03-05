@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect # HttpResponseRedirect который будет использоваться для перенаправления
+from django.shortcuts import render, redirect, get_object_or_404  # HttpResponseRedirect который будет использоваться
+# для перенаправления
 # пользователя к странице topics после отправки введенной темы.
 from django.contrib.auth.decorators import login_required
 # Импортируем исключение Http404, которое будет выдаваться программой при запросе пользователем темы,
@@ -23,7 +24,7 @@ def topics(request):  # Функции topics() необходим один па
     """
     Выводит список тем.
     """
-    # Далеев ыдается запрос к базе данных на получение объектов Topic, отсортированных по атрибуту date_added.
+    # Далее выдается запрос к базе данных на получение объектов Topic, отсортированных по атрибуту date_added.
     # Полученный итоговый набор сохраняется в topics.
     topics = Topic.objects.filter(owner=request.user).order_by('date_added')
 
@@ -42,7 +43,7 @@ def topic(request, topic_id):
     Выводит одну тему и все ее записи.
     """
     # Функция get() используется для получения темы.
-    topic = Topic.objects.get(id=topic_id)
+    topic = get_object_or_404(Topic, id=topic_id)
 
     # Проверка того, что тема принадлежит текущему пользователю.
     check_topic_owner(topic, request)
