@@ -1,4 +1,5 @@
 # АКТИВАЦИЯ МОДЕЛЕЙ. Добавление моих моделей в список установленных.
+import django_heroku
 
 """
 Django settings for learning_log project.
@@ -131,3 +132,6 @@ STATIC_URL = '/static/'
 
 # Мои настройки
 LOGIN_URL = '/users/login/'
+
+# Настройки Heroku
+django_heroku.settings(locals())
